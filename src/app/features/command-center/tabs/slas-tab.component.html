@@ -1,0 +1,37 @@
+<section class="tab-content active" aria-label="SLAs">
+  <div class="form-card">
+    <h4>SLA Targets (Response / Resolution mins)</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Severity</th>
+          <th>L1</th>
+          <th>L2</th>
+          <th>L3</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of targetRows(); track row.severity) {
+          <tr>
+            <td>{{ row.severity }}</td>
+            @for (value of row.valuesByTier; track $index) {
+              <td>{{ value }}</td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <strong>Monthly SLO Compliance: {{ monthlySla().compliancePercent }}%</strong>
+    ({{ monthlySla().metIncidents }} / {{ monthlySla().totalIncidents }} incidents met SLA, Target >= {{ monthlyTarget }}%)
+  </div>
+  @if (latest48hSnapshot(); as snapshot) {
+    <div>
+      Rolling 48h SLA: <strong>{{ snapshot.compliancePercent }}%</strong>
+      ({{ snapshot.metIncidents }} / {{ snapshot.totalIncidents }} incidents met SLA)
+    </div>
+  }
+  <div class="escalation-flow">Governance Cadence: Daily standup · Weekly review · Monthly SLO · Quarterly business</div>
+</section>

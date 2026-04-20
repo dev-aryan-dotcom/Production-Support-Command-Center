@@ -1,0 +1,23 @@
+<section class="tab-content active" aria-label="Roster">
+  <h3><i class="fas fa-calendar-week" aria-hidden="true"></i> Weekly On-Call Shift Roster</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Role</th>
+        @for (day of rosterDays; track day; let dayIndex = $index) {
+          <th [class.today-col]="dayIndex === todayRosterIndex()">{{ day }}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of rosterRows(); track row.role) {
+        <tr>
+          <td>{{ row.role }}</td>
+          @for (shift of row.shifts; track shift + $index; let dayIndex = $index) {
+            <td [class.today-col]="dayIndex === todayRosterIndex()">{{ shift }}</td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

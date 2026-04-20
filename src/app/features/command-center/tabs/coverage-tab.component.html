@@ -1,0 +1,28 @@
+<section class="tab-content active" aria-label="Coverage Matrix">
+  <table>
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Databricks</th>
+        <th>Dynatrace</th>
+        <th>Kafka</th>
+        <th>Airflow</th>
+        <th>Delta Lake</th>
+        <th>MLflow</th>
+        <th>Cloud</th>
+        <th>Security</th>
+        <th>FinOps</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (platform of platforms; track platform) {
+        <tr>
+          <td><strong>{{ platform }}</strong></td>
+          @for (item of coverage[platform]; track $index) {
+            <td>{{ item }}</td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

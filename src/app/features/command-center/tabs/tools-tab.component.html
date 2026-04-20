@@ -1,0 +1,10 @@
+<section class="tab-content active" aria-label="Tools">
+  <div class="kpi-grid">
+    @for (tool of tools; track tool) {
+      <div class="kpi-card tool-card">
+        <i class="fas" [class]="'fas ' + tool.icon" aria-hidden="true"></i>
+        <span>{{ tool.label }}</span>
+      </div>
+    }
+  </div>
+</section>

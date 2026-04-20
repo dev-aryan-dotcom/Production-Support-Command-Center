@@ -1,0 +1,27 @@
+<section class="tab-content active" aria-label="Runbooks">
+  <div class="runbook-grid">
+    <div class="form-card">
+      <h4>Databricks Runbooks</h4>
+      <ul>
+        <li><strong>OOMKilled:</strong> spark.executor.memory + spark.sql.adaptive.enabled</li>
+        <li><strong>Delta conflicts:</strong> retry with merge, optimize</li>
+        <li><strong>Cluster failures:</strong> restart, check cloud logs</li>
+        <li><strong>Streaming lag:</strong> increase maxRatePerPartition</li>
+        <li><strong>Unity Catalog:</strong> validate metastore grants</li>
+      </ul>
+      <code>dbutils.fs.ls /mnt/</code>
+    </div>
+
+    <div class="form-card">
+      <h4>Dynatrace Runbooks</h4>
+      <ul>
+        <li><strong>Latency alerts:</strong> check DB calls and PurePath</li>
+        <li><strong>OneAgent disconnect:</strong> verify network and certs</li>
+        <li><strong>CPU spikes:</strong> thread dump analysis</li>
+        <li><strong>False positives:</strong> adjust baseline sensitivity</li>
+        <li><strong>SLO burn rate:</strong> error budget policy</li>
+      </ul>
+      <code>curl -X GET "https://your-dynatrace/api/v2"</code>
+    </div>
+  </div>
+</section>

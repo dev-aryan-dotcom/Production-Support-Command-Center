@@ -1,0 +1,50 @@
+<div class="command-center">
+  <div class="header">
+    <h1><i class="fas fa-chalkboard-user" aria-hidden="true"></i> Production Support Command Center</h1>
+    <div class="sub">Real-time observability · Incident command · On-call intelligence</div>
+  </div>
+
+  <div class="tabs" id="tabHeaders" role="tablist" aria-label="Command center sections">
+    @for (tab of tabs; track tab.id) {
+      <button
+        class="tab-btn"
+        [class.active]="activeTab() === tab.id"
+        [attr.aria-selected]="activeTab() === tab.id"
+        [attr.aria-controls]="tab.id"
+        role="tab"
+        type="button"
+        (click)="setTab(tab.id)"
+      >
+        <i class="fas" [class]="'fas ' + tab.icon" aria-hidden="true"></i>
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  @if (activeTab() === 'dashboard') {
+    <app-dashboard-tab id="dashboard"></app-dashboard-tab>
+  }
+  @if (activeTab() === 'incidents') {
+    <app-incidents-tab id="incidents"></app-incidents-tab>
+  }
+  @if (activeTab() === 'roster') {
+    <app-roster-tab id="roster"></app-roster-tab>
+  }
+  @if (activeTab() === 'learning') {
+    <app-learning-tab id="learning"></app-learning-tab>
+  }
+  @if (activeTab() === 'runbooks') {
+    <app-runbooks-tab id="runbooks"></app-runbooks-tab>
+  }
+  @if (activeTab() === 'coverage') {
+    <app-coverage-tab id="coverage"></app-coverage-tab>
+  }
+  @if (activeTab() === 'tools') {
+    <app-tools-tab id="tools"></app-tools-tab>
+  }
+  @if (activeTab() === 'slas') {
+    <app-slas-tab id="slas"></app-slas-tab>
+  }
+
+  <footer>360° Command Center — Live incident tracking and MTTR simulation</footer>
+</div>

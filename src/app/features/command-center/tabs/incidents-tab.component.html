@@ -1,0 +1,243 @@
+<section class="tab-content active" aria-label="Incidents">
+  @if (exportNotification()) {
+    <div class="toast-notification" role="status" aria-live="polite">✓ {{ exportNotification() }}</div>
+  }
+  <div class="form-card">
+    <h3><i class="fas fa-plus-circle" aria-hidden="true"></i> Log New Incident</h3>
+    <form [formGroup]="form" (ngSubmit)="createIncident()">
+      <div class="grid-2">
+        <div class="field-group">
+          <label for="incident-platform">Platform <span aria-hidden="true">*</span></label>
+          <select id="incident-platform" formControlName="platform">
+            <option value="" disabled>Select platform</option>
+            @for (option of platformOptions; track option) {
+              <option [value]="option">{{ option }}</option>
+            }
+          </select>
+          @if (isFieldInvalid('platform')) {
+            <small class="field-error">Platform is required.</small>
+          }
+        </div>
+
+        <div class="field-group">
+          <label for="incident-severity">Severity <span aria-hidden="true">*</span></label>
+          <select id="incident-severity" formControlName="severity">
+            <option value="" disabled>Select severity</option>
+            @for (option of severityOptions; track option) {
+              <option [value]="option">{{ option }}</option>
+            }
+          </select>
+          @if (isFieldInvalid('severity')) {
+            <small class="field-error">Severity is required.</small>
+          }
+        </div>
+
+        <div class="field-group">
+          <label for="incident-tier">Tier <span aria-hidden="true">*</span></label>
+          <select id="incident-tier" formControlName="tier">
+            <option value="" disabled>Select tier</option>
+            @for (option of tierOptions; track option) {
+              <option [value]="option">{{ option }}</option>
+            }
+          </select>
+          @if (isFieldInvalid('tier')) {
+            <small class="field-error">Tier is required.</small>
+          }
+        </div>
+
+        <div class="field-group">
+          <label for="incident-env">Environment <span aria-hidden="true">*</span></label>
+          <select id="incident-env" formControlName="env">
+            <option value="" disabled>Select environment</option>
+            @for (option of envOptions; track option) {
+              <option [value]="option">{{ option }}</option>
+            }
+          </select>
+          @if (isFieldInvalid('env')) {
+            <small class="field-error">Environment is required.</small>
+          }
+        </div>
+      </div>
+
+      <div class="field-group error-log-field">
+        <label for="incident-error">Error Log / Description <span aria-hidden="true">*</span></label>
+        <div class="error-log-row">
+          <input
+            id="incident-error"
+            type="text"
+            formControlName="errorLog"
+            maxlength="150"
+            placeholder="Add the error details or incident description"
+          />
+          <span class="character-counter" aria-live="polite">
+            {{ getErrorLogRemainingCharacters() }} / {{ getErrorLogMaxLength() }} left
+          </span>
+        </div>
+        @if (isFieldInvalid('errorLog')) {
+          <small class="field-error">
+            @if (form.controls.errorLog.hasError('maxlength')) {
+              Description must be within 150 characters.
+            } @else {
+              Error log / description is required.
+            }
+          </small>
+        }
+      </div>
+
+      <div class="checklist" aria-label="Resolution checklist">
+        <strong>Resolution Checklist (10-point)</strong>
+        <div class="checklist-grid">
+          <span>1. Reproduce</span>
+          <span>2. Check logs</span>
+          <span>3. Metrics review</span>
+          <span>4. Runbook</span>
+          <span>5. Escalate?</span>
+          <span>6. Fix applied</span>
+          <span>7. Validate</span>
+          <span>8. Post-mortem</span>
+          <span>9. Documentation</span>
+          <span>10. Close</span>
+        </div>
+      </div>
+
+      <button class="primary" type="submit" style="margin-top: 20px;">
+        <i class="fas fa-save" aria-hidden="true"></i>
+        Log Incident and Track MTTR
+      </button>
+
+      @if (successMessage()) {
+        <p class="success-msg" role="status" aria-live="polite">{{ successMessage() }}</p>
+      }
+    </form>
+  </div>
+
+  <h3>Incident History (with MTTR tracking)</h3>
+  <div class="history-filters">
+    <select [value]="platformFilter()" (change)="platformFilter.set(($any($event.target).value))" aria-label="Filter by platform">
+      <option value="All">All Platforms</option>
+      @for (option of platformOptions; track option) {
+        <option [value]="option">{{ option }}</option>
+      }
+    </select>
+
+    <select [value]="severityFilter()" (change)="severityFilter.set(($any($event.target).value))" aria-label="Filter by severity">
+      <option value="All">All Severities</option>
+      @for (option of severityOptions; track option) {
+        <option [value]="option">{{ option }}</option>
+      }
+    </select>
+
+    <select [value]="tierFilter()" (change)="tierFilter.set(($any($event.target).value))" aria-label="Filter by tier">
+      <option value="All">All Tiers</option>
+      @for (option of tierOptions; track option) {
+        <option [value]="option">{{ option }}</option>
+      }
+    </select>
+
+    <select [value]="statusFilter()" (change)="statusFilter.set(($any($event.target).value))" aria-label="Filter by status">
+      <option value="All">All Statuses</option>
+      @for (option of statusOptions; track option) {
+        <option [value]="option">{{ option }}</option>
+      }
+    </select>
+
+    @if (hasActiveHistoryFilters() || historySearch()) {
+      <button type="button" class="btn-inline history-clear" (click)="clearHistoryFilters(); clearHistorySearch()">Clear Filters</button>
+    }
+  </div>
+  <div class="history-toolbar">
+    <input
+      type="search"
+      [value]="historySearch()"
+      (input)="historySearch.set(($any($event.target).value))"
+      placeholder="Search by description, tags, incident id, platform"
+      aria-label="Search incident history"
+    />
+    <select
+      [value]="selectedExportFormat()"
+      (change)="selectedExportFormat.set(($any($event.target).value))"
+      aria-label="Choose export format"
+      class="history-export-format"
+    >
+      @for (option of exportFormatOptions; track option.value) {
+        <option [value]="option.value">{{ option.label }}</option>
+      }
+    </select>
+    <button type="button" class="btn-inline history-export" (click)="exportAllHistory()">Export All Logs</button>
+    @if (historySearch()) {
+      <button type="button" class="btn-inline history-clear" (click)="clearHistorySearch()">Clear</button>
+    }
+  </div>
+  <div class="table-scroll history-scroll">
+    <table aria-label="Incident history table" class="centered-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Platform</th>
+          <th>Severity</th>
+          <th>Tier</th>
+          <th>Resolved (mins)</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (entry of filteredHistory(); track entry.id + '-' + entry.openedAt) {
+          <tr>
+            <td>{{ entry.id }}</td>
+            <td>{{ entry.platform }}</td>
+            <td>{{ entry.severity }}</td>
+            <td>{{ entry.tier }}</td>
+            <td>{{ entry.resolvedMins === null ? 'N/A' : entry.resolvedMins + ' min' }}</td>
+            <td>{{ entry.status }}</td>
+            <td>
+              <div class="row-actions">
+                <button type="button" class="btn-inline" (click)="toggleHistoryDetails(entry.id)">
+                  {{ isHistoryExpanded(entry.id) ? 'Collapse' : 'Expand' }}
+                </button>
+                <select
+                  class="incident-export-select"
+                  (change)="onIncidentExportSelect(entry, $event)"
+                  aria-label="Export incident"
+                >
+                  <option value="" selected>Export</option>
+                  <option value="pdf">Download PDF</option>
+                  <option value="json">Download JSON</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+          @if (isHistoryExpanded(entry.id)) {
+            <tr class="detail-row">
+              <td colspan="7">
+                <div class="detail-panel history-detail-panel">
+                  <div class="full-error"><strong>Description:</strong> {{ entry.error }}</div>
+                  <div class="full-error"><strong>Solution:</strong> {{ entry.solution || 'Solution not provided.' }}</div>
+                  <div class="full-error tags-row">
+                    <strong>Tags:</strong>
+                    <div class="tag-list">
+                      @for (tag of entry.tags; track tag) {
+                        <span class="tag-pill">{{ tag }}</span>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          }
+        }
+        @if (filteredHistory().length === 0) {
+          <tr>
+            <td colspan="7">
+              @if (historySearch() || hasActiveHistoryFilters()) {
+                No incidents matched your filters or search.
+              } @else {
+                No incidents to display. Create a new incident to get started.
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
