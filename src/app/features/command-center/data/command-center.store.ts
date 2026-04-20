@@ -622,7 +622,13 @@ export class CommandCenterStore {
           return;
         }
 
-        this.slaTargets.set(records);
+        // Merge API records with defaults to ensure all SLA targets are present
+        const recordMap = new Map(records.map(r => [r.id, r]));
+        const mergedRecords = CommandCenterStore.DEFAULT_SLA_TARGETS.map(
+          defaultTarget => recordMap.get(defaultTarget.id) ?? defaultTarget
+        );
+
+        this.slaTargets.set(mergedRecords);
         this.refreshSlaSnapshots();
       });
   }

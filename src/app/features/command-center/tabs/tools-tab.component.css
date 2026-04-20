@@ -1,7 +1,7 @@
 .kpi-grid {
   display: grid;
   gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
 }
 
 .kpi-card {
@@ -21,4 +21,5 @@
 
 .tool-card i {
   color: #1e4a6b;
+  flex-shrink: 0;
 }
