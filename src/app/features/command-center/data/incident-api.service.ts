@@ -2,14 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IncidentRecord, SlaSnapshotRecord, SlaTargetRecord } from './command-center.models';
-import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class IncidentApiService {
+  private static readonly API_BASE_URL = 'https://oryfg9nq1e.execute-api.eu-north-1.amazonaws.com';
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiBaseUrl}/incidents`;
-  private readonly slaTargetsUrl = `${environment.apiBaseUrl}/slaTargets`;
-  private readonly slaSnapshotsUrl = `${environment.apiBaseUrl}/slaSnapshots`;
+  private readonly baseUrl = `${IncidentApiService.API_BASE_URL}/incidents`;
+  private readonly slaTargetsUrl = `${IncidentApiService.API_BASE_URL}/slaTargets`;
+  private readonly slaSnapshotsUrl = `${IncidentApiService.API_BASE_URL}/slaSnapshots`;
 
   getIncidents(): Observable<IncidentRecord[]> {
     return this.http.get<IncidentRecord[]>(this.baseUrl);

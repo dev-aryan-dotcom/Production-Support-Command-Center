@@ -3,12 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "sync:env": "node scripts/generate-environment.mjs",
-    "start": "npm run sync:env && ng serve",
+    "start": "ng serve",
     "server": "npx json-server --watch db.json --port 3000",
-    "build": "npm run sync:env && ng build",
-    "watch": "npm run sync:env && ng build --watch --configuration development",
-    "test": "npm run sync:env && ng test"
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
   },
   "private": true,
   "packageManager": "npm@11.12.1",
@@ -21,7 +20,6 @@
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
     "chart.js": "^4.5.1",
-    "dotenv": "^17.4.2",
     "jspdf": "^4.2.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"

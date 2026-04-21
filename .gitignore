@@ -48,10 +48,6 @@ Thumbs.db
 .env.*
 !.env.example
 
-# Generated environment files (created at build time from .env)
-src/environments/environment.ts
-src/environments/environment.prod.ts
-
 # AWS Amplify local artifacts
 amplify/#current-cloud-backend/
 amplify/.config/local-*
