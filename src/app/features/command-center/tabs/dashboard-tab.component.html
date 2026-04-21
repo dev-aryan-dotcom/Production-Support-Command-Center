@@ -136,7 +136,8 @@
     </button>
   </div>
 
-  @if (isLoadingPage()) {
+
+  @if (isLoadingPage() && incidents().length > 0) {
     <div class="loading-indicator">
       <span class="spinner"></span> Loading incidents...
     </div>
@@ -188,6 +189,7 @@
               @if (inc.status === 'Being Resolved' && canResolveIncident(inc.id)) {
                 <button type="button" class="btn-action btn-action-primary" (click)="resolveIncident(inc.id)">Resolve</button>
               }
+
             </div>
           </td>
         </tr>
@@ -232,7 +234,13 @@
       }
       @if (filteredIncidents().length === 0) {
         <tr>
-          <td colspan="8" class="empty-state">{{ incidents().length === 0 ? 'No active incidents' : 'No active incidents match the current filters' }}</td>
+          <td colspan="8" class="empty-state">
+            @if (!isLoadingPage() && incidents().length === 0) {
+              No active incidents
+            } @else {
+              No active incidents match the current filters
+            }
+          </td>
         </tr>
       }
     </tbody>

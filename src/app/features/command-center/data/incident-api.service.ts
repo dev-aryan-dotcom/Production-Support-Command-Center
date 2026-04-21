@@ -5,7 +5,7 @@ import { IncidentRecord, SlaSnapshotRecord, SlaTargetRecord } from './command-ce
 
 @Injectable({ providedIn: 'root' })
 export class IncidentApiService {
-  private static readonly API_BASE_URL = 'https://oryfg9nq1e.execute-api.eu-north-1.amazonaws.com';
+  private static readonly API_BASE_URL = 'https://ixnccxqiwe.execute-api.us-east-1.amazonaws.com/dev/incidents';
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${IncidentApiService.API_BASE_URL}/incidents`;
   private readonly slaTargetsUrl = `${IncidentApiService.API_BASE_URL}/slaTargets`;

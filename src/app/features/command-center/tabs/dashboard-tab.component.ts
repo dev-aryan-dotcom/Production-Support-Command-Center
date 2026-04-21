@@ -41,6 +41,36 @@ export class DashboardTabComponent implements AfterViewInit, OnDestroy {
   private toastTimeoutId?: number;
   private timerTickId?: number;
 
+  onExportIncident(incident: any, event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+    if (value === 'json') {
+      const blob = new Blob([JSON.stringify(incident, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      this.downloadFile(url, `incident-${incident.id}.json`);
+    } else if (value === 'excel') {
+      // Simple Excel export: CSV format
+      const headers = Object.keys(incident).join(',');
+      const values = Object.values(incident).map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+      const csv = `${headers}\n${values}`;
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      this.downloadFile(url, `incident-${incident.id}.csv`);
+    }
+    (event.target as HTMLSelectElement).value = '';
+  }
+
+  private downloadFile(url: string, filename: string): void {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 100);
+  }
+
   @ViewChild('volumeCanvas')
   private volumeCanvas?: ElementRef<HTMLCanvasElement>;
 
